@@ -76,7 +76,6 @@ def extraire_features(path: str, sr=SAMPLE_RATE):
 
     feats = np.array(feats)
 
-    # safety check (VERY useful)
     assert feats.shape[0] == 58, f"Feature size mismatch: {feats.shape}"
 
     return feats
