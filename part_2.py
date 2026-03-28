@@ -36,6 +36,8 @@ RANDOM_STATE = 42
 OUTPUT_MODEL   = "meilleur_modele_part2.pkl"
 OUTPUT_ENCODER = "label_encoder_part2.pkl"
 
+# folder where all per-sequence CSVs and the merged CSV will be saved
+ANNOTATIONS_DIR = "annotations_after_training"
 
 NOISE_LABEL = "Bruit"
 
@@ -46,17 +48,20 @@ LABEL_MAP = {
     "SpermWhale":         "Cachalot",
     "White_sidedDolphin": "Dauphin à flancs blancs",
 }
+# Any folder not listed above is treated as noise.
+
+#Sliding-window settings for long audio detection
+
+WINDOW_SEC   = 3.0   # length of each analysis window (seconds)
+HOP_SEC      = 1.0   # step between consecutive windows (seconds)
+MIN_CONF     = 0.55  # minimum confidence to accept a prediction (not noise)
+MIN_CALL_SEC = 1.5   # merge gaps shorter than this (seconds) within the same species
+
+# folder that contains the long audio sequences to analyse
+LONG_AUDIO_DIR = os.path.join("data", "long_audio", "audio")
 
 
-#Sliding-window settings for long audio detection 
-
-WINDOW_SEC  = 3.0   # length of each analysis window (seconds)
-HOP_SEC     = 1.0   # step between consecutive windows (seconds)
-MIN_CONF    = 0.55  # minimum confidence to accept a prediction (not noise)
-MIN_CALL_SEC = 1.5  # merge gaps shorter than this (seconds) within the same species
-
-
-# Feature extraction 
+# Feature extraction
 def extraire_features(path: str = None, y: np.ndarray = None, sr: int = SAMPLE_RATE) -> np.ndarray:
     """
     Extract the 58-dimensional feature vector from either:
@@ -100,7 +105,7 @@ def extraire_features(path: str = None, y: np.ndarray = None, sr: int = SAMPLE_R
     return feats
 
 
-# Dataset construction 
+# Dataset construction
 
 def lister_audio_files(root):
     #Looping over species folders
@@ -130,7 +135,6 @@ def construire_dataframe(root):
     df = pd.DataFrame(X)
     df["label"] = y
     return df
-
 
 
 def get_models():
@@ -176,7 +180,7 @@ def plot_confusion(cm, classes, model_name):
     plt.ylabel("Vrai label")
     plt.xlabel("Prédit")
     plt.tight_layout()
-    plt.savefig("confusion_matrix.png", dpi=150)
+    plt.savefig("confusion_matrix_part2.png", dpi=150)
     plt.close()
 
 
@@ -190,7 +194,7 @@ def plot_importance(clf):
     plt.xticks(range(20), idx, rotation=45)
     plt.title("Top-20 feature importances")
     plt.tight_layout()
-    plt.savefig("feature_importance.png", dpi=150)
+    plt.savefig("feature_importance_part2.png", dpi=150)
     plt.close()
 
 
@@ -206,7 +210,6 @@ def evaluer(pipeline, X, y, le, name):
     plot_importance(pipeline.named_steps["clf"])
 
 
-
 def save(pipeline, le):
     pickle.dump(pipeline, open(OUTPUT_MODEL,   "wb"))
     pickle.dump(le,       open(OUTPUT_ENCODER, "wb"))
@@ -219,7 +222,7 @@ def load():
     )
 
 
-#  Sliding window detection on long audio 
+# Sliding window detection on long audio
 
 def _windows(y: np.ndarray, sr: int,
     window_sec: float = WINDOW_SEC,
@@ -248,7 +251,7 @@ def _windows(y: np.ndarray, sr: int,
 
 def _merge_detections(detections: list,
                       min_gap_sec: float = MIN_CALL_SEC) -> list:
-   # if specie detected in back to back window with gap shorter then "min_gap_sec", make it one continuous call segment, else start new segment
+    # if specie detected in back to back window with gap shorter then "min_gap_sec", make it one continuous call segment, else start new segment
     if not detections:
         return []
 
@@ -292,7 +295,7 @@ def detect_long_audio(
     min_call_sec:float = MIN_CALL_SEC,
     verbose:     bool  = True,
 ):
-  #this functions returns a panda dataframes
+    #this function returns a panda dataframe
     pipeline, le = load()
 
     if verbose:
@@ -346,7 +349,7 @@ def detect_long_audio(
     return df
 
 
-#  Timeline plot 
+# Timeline plot
 
 _SPECIES_COLOURS = {
     "Béluga":                    "#4e9af1",
@@ -376,16 +379,16 @@ def plot_timeline(df: pd.DataFrame, audio_path: str,
     for _, row in df.iterrows():
         colour = _SPECIES_COLOURS.get(row["species"], _DEFAULT_COLOUR)
         ax.barh(
-            y       = y_pos[row["species"]],
-            width   = row["duration"],
-            left    = row["t_start"],
-            height  = 0.6,
-            color   = colour,
-            alpha   = 0.85,
+            y         = y_pos[row["species"]],
+            width     = row["duration"],
+            left      = row["t_start"],
+            height    = 0.6,
+            color     = colour,
+            alpha     = 0.85,
             edgecolor = "white",
             linewidth = 0.5,
         )
-        # label the bar 
+        # label the bar
         if row["duration"] > total_sec * 0.015:
             ax.text(
                 row["t_start"] + row["duration"] / 2,
@@ -418,7 +421,7 @@ def plot_timeline(df: pd.DataFrame, audio_path: str,
     plt.close()
 
 
-# print results  
+# print results
 
 def afficher_resultats(df: pd.DataFrame):
     if df.empty:
@@ -438,9 +441,8 @@ def afficher_resultats(df: pd.DataFrame):
     print(f"  Total : {len(df)} appel(s) détecté(s)\n")
 
 
-
 def main():
-    # 1. Build datasets 
+    # 1. Build datasets
     print("\n[1] Chargement des données")
     df_train = construire_dataframe(TRAIN_DIR)
     df_test  = construire_dataframe(TEST_DIR)
@@ -456,7 +458,7 @@ def main():
     print(f"\n  Classes : {list(le.classes_)}")
     print(f"  Train : {X_train.shape[0]} échantillons | Test : {X_test.shape[0]}")
 
-    #2. Train & cross-validate 
+    # 2. Train & cross-validate
     print("\n[2] Entraînement (cross-validation 5-fold)")
     models  = get_models()
     results = evaluate_models(models, X_train, y_train)
@@ -465,22 +467,59 @@ def main():
     print(f"\n  ✓ Meilleur modèle : {best_name}")
     best_pipe.fit(X_train, y_train)
 
-    #3. Evaluate on held-out test set
+    # 3. Evaluate on held-out test set
     print("\n[3] Évaluation sur le jeu de test")
     evaluer(best_pipe, X_test, y_test, le, best_name)
 
-    #4. Save
+    # 4. Save
     save(best_pipe, le)
 
-    long_audio_path = os.path.join("data", "long_audio", "example.wav")
-    if os.path.exists(long_audio_path):
-        print("\n[5] Détection sur audio long")
-        df_results = detect_long_audio(long_audio_path)
+    # 5. Detect calls in every .wav found in LONG_AUDIO_DIR
+    if not os.path.isdir(LONG_AUDIO_DIR):
+        print(f"\n[5] (Passer – dossier non trouvé : {LONG_AUDIO_DIR})")
+        return
+
+    # collect all wav files in the folder, sorted by name so sequence_06 comes before sequence_26
+    wav_files = sorted([
+        os.path.join(LONG_AUDIO_DIR, f)
+        for f in os.listdir(LONG_AUDIO_DIR)
+        if f.lower().endswith(".wav")
+    ])
+
+    if not wav_files:
+        print(f"\n[5] (Passer – aucun fichier .wav dans {LONG_AUDIO_DIR})")
+        return
+
+    print(f"\n[5] Détection sur {len(wav_files)} séquence(s) audio longue(s)")
+
+    # create the annotations output folder if it doesn't exist yet
+    os.makedirs(ANNOTATIONS_DIR, exist_ok=True)
+
+    all_detections = []   # will hold every detection across all sequences
+
+    for audio_path in wav_files:
+        df_results = detect_long_audio(audio_path)
         afficher_resultats(df_results)
-        plot_timeline(df_results, long_audio_path)
-        df_results.to_csv("detections.csv", index=False)
-    else:
-        print(f"\n[5] (Passer – fichier non trouvé : {long_audio_path})")
+
+        if not df_results.empty:
+            # add a column so we know which file each detection came from
+            df_results.insert(0, "fichier", os.path.basename(audio_path))
+            all_detections.append(df_results)
+
+            # save a per-sequence CSV in the annotations folder
+            stem     = os.path.splitext(os.path.basename(audio_path))[0]
+            csv_path = os.path.join(ANNOTATIONS_DIR, f"{stem}_detections.csv")
+            df_results.to_csv(csv_path, index=False)
+
+            # save a per-sequence timeline image in the same folder
+            timeline_path = os.path.join(ANNOTATIONS_DIR, f"{stem}_timeline.png")
+            plot_timeline(df_results, audio_path, save_path=timeline_path)
+
+    # save one merged CSV that contains every detection from every sequence
+    if all_detections:
+        merged_csv = os.path.join(ANNOTATIONS_DIR, "all_detections.csv")
+        pd.concat(all_detections, ignore_index=True).to_csv(merged_csv, index=False)
+        print(f"\n  → {ANNOTATIONS_DIR}/ contient {len(all_detections)} CSV(s) + all_detections.csv")
 
 
 if __name__ == "__main__":

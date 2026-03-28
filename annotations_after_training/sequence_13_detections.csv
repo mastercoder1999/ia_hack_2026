@@ -1,0 +1,5 @@
+fichier,species,t_start,t_end,duration,mean_confidence
+sequence_13.wav,Baleine à bosse,27.0,33.0,6.0,0.767
+sequence_13.wav,Baleine à bosse,37.0,42.0,5.0,0.853
+sequence_13.wav,Baleine à bosse,44.0,53.0,9.0,0.802
+sequence_13.wav,Baleine à bosse,218.0,224.0,6.0,0.737

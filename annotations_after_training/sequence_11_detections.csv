@@ -1,0 +1,10 @@
+fichier,species,t_start,t_end,duration,mean_confidence
+sequence_11.wav,Baleine à bosse,27.0,30.0,3.0,0.659
+sequence_11.wav,Béluga,28.0,31.0,3.0,0.6
+sequence_11.wav,Baleine à bosse,30.0,33.0,3.0,0.59
+sequence_11.wav,Baleine à bosse,49.0,53.0,4.0,0.771
+sequence_11.wav,Baleine à bosse,69.0,72.0,3.0,0.609
+sequence_11.wav,Baleine à bosse,75.0,78.0,3.0,0.584
+sequence_11.wav,Baleine à bosse,93.0,97.0,4.0,0.649
+sequence_11.wav,Baleine à bosse,129.0,134.0,5.0,0.629
+sequence_11.wav,Baleine à bosse,143.0,145.0,2.0,0.753
