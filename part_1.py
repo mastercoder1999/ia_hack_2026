@@ -45,32 +45,41 @@ def extraire_features(path: str, sr=SAMPLE_RATE):
     y, sr = librosa.load(path, sr=sr, mono=True)
 
     def stats(x):
-        return np.mean(x, axis=-1), np.std(x, axis=-1)
+        mean = np.mean(x, axis=1) if x.ndim > 1 else np.array([np.mean(x)])
+        std  = np.std(x, axis=1)  if x.ndim > 1 else np.array([np.std(x)])
+        return np.concatenate([mean, std])
 
     feats = []
 
+    # MFCC
     mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=N_MFCC)
-    feats += list(stats(mfcc)[0]) + list(stats(mfcc)[1])
+    feats.extend(stats(mfcc))
 
-    # Features avec sr
+    # spectral features (avec sr)
     for func in [
         librosa.feature.spectral_centroid,
         librosa.feature.spectral_bandwidth,
     ]:
         f = func(y=y, sr=sr)
-        feats += list(stats(f))
+        feats.extend(stats(f))
 
-    # Features sans sr
+    # sans sr
     zcr = librosa.feature.zero_crossing_rate(y)
-    feats += list(stats(zcr))
+    feats.extend(stats(zcr))
 
     rms = librosa.feature.rms(y=y)
-    feats += list(stats(rms))
+    feats.extend(stats(rms))
 
+    # chroma
     chroma = librosa.feature.chroma_stft(y=y, sr=sr)
-    feats += list(stats(chroma)[0]) + list(stats(chroma)[1])
+    feats.extend(stats(chroma))
 
-    return np.array(feats)
+    feats = np.array(feats)
+
+    # safety check (VERY useful)
+    assert feats.shape[0] == 58, f"Feature size mismatch: {feats.shape}"
+
+    return feats
 
 def iter_audio_files(root):
     for specie in sorted(os.listdir(root)):
