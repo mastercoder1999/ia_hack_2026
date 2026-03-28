@@ -189,7 +189,7 @@ def plot_importance(clf):
     plt.savefig("feature_importance.png")
     plt.close()
 
-def evaluer(pipeline, X, y, le, name):
+def evaluer(pipeline, X, y, label, name):
     # Générer des prédictions à partir de la pipeline entraîné
     y_pred = pipeline.predict(X)
 
@@ -197,16 +197,16 @@ def evaluer(pipeline, X, y, le, name):
 
     print(f"\n{name}")
     print(metrics)
-    print(classification_report(y, y_pred, target_names=le.classes_))
+    print(classification_report(y, y_pred, target_names=label.classes_))
     # rows = true labels, columns = predicted labels
     cm = confusion_matrix(y, y_pred)
-    plot_confusion(cm, le.classes_, name)
+    plot_confusion(cm, label.classes_, name)
     plot_importance(pipeline.named_steps["clf"])
 
-def save(pipeline, le):
+def save(pipeline, label):
     # Sauvegarde du model.
     pickle.dump(pipeline, open(OUTPUT_MODEL, "wb"))
-    pickle.dump(le, open(OUTPUT_ENCODER, "wb"))
+    pickle.dump(label, open(OUTPUT_ENCODER, "wb"))
 
 def load():
     # Load le model.
@@ -218,19 +218,19 @@ def load():
 def predict_file(path):
     # Seulement utiliser pour web.
     # Load le modèle préfait pour faire de l'analyse de son manuelle.
-    pipeline, le = load()
+    pipeline, label = load()
     x = extraire_features(path).reshape(1, -1)
 
     pred = pipeline.predict(x)[0]
     proba = pipeline.predict_proba(x)[0]
 
-    return pred, proba, le
+    return pred, proba, label
 
-def print_prediction(pred, proba, le):
-    label = le.inverse_transform([pred])[0]
+def print_prediction(pred, proba, label):
+    label = label.inverse_transform([pred])[0]
     print(f"Prediction: {label}")
 
-    for cls, p in zip(le.classes_, proba):
+    for cls, p in zip(label.classes_, proba):
         print(f"{cls:30s} {'█'*int(p*30)} {p:.3f}")
 
 def main():
@@ -240,15 +240,15 @@ def main():
     df_test = construire_dataframe(TEST_DIR)
 
     # Merge le data de train dans un labelEncoder
-    le = LabelEncoder()
-    le.fit(df_train["label"])
+    label = LabelEncoder()
+    label.fit(df_train["label"])
 
     # Convertir Dataset dans un format que scikit peut lire
     X_train = df_train.drop(columns=["label"]).values
-    y_train = le.transform(df_train["label"])
+    y_train = label.transform(df_train["label"])
 
     X_test = df_test.drop(columns=["label"]).values
-    y_test = le.transform(df_test["label"])
+    y_test = label.transform(df_test["label"])
 
     print("[2] Training")
     # Get models and evaluates them
@@ -260,11 +260,11 @@ def main():
 
     print("[3] Evaluation")
     # Evaluation avec le meilleur pipeline
-    evaluer(best_pipe, X_test, y_test, le, best_name)
+    evaluer(best_pipe, X_test, y_test, label, best_name)
 
     print("[4] Saving")
     # Sauvegarde du Pipeline pour utilisation web
-    save(best_pipe, le)
+    save(best_pipe, label)
 
 if __name__ == "__main__":
     main()
