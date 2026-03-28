@@ -41,17 +41,6 @@ LABEL_MAP = {
 }
 
 def extraire_features(chemin: str, sr: int = SAMPLE_RATE) -> np.ndarray:
-    """
-    Retourne un vecteur de 58 features (mean + std) pour un fichier .wav.
-
-    Détail :
-      MFCC (13)           → 26 dims
-      Centroïde spectral  →  2 dims
-      Bandwidth spectrale →  2 dims
-      ZCR                 →  2 dims
-      Chroma STFT (12)    → 24 dims
-      RMS énergie         →  2 dims
-    """
     y, sr = librosa.load(chemin, sr=sr, mono=True)
     feats = []
 
@@ -77,12 +66,7 @@ def extraire_features(chemin: str, sr: int = SAMPLE_RATE) -> np.ndarray:
 
     return np.array(feats)
 
-
 def construire_dataframe(dossier_racine: str) -> pd.DataFrame:
-    """
-    Parcourt dossier_racine/<espece>/*.wav et retourne un DataFrame
-    avec colonnes feat_0 … feat_N + 'label'.
-    """
     enregistrements, labels = [], []
 
     especes = sorted([
@@ -118,16 +102,7 @@ def construire_dataframe(dossier_racine: str) -> pd.DataFrame:
     df["label"] = labels
     return df
 
-
-# ─────────────────────────────────────────────
-# 2. ENTRAÎNEMENT ET SÉLECTION DU MODÈLE
-# ─────────────────────────────────────────────
-
 def entrainer_modeles(X_train: np.ndarray, y_train: np.ndarray):
-    """
-    Compare 4 classifieurs par cross-validation 5-fold (F1-macro).
-    Entraîne le meilleur sur tout X_train et le retourne.
-    """
     modeles = {
         "Random Forest"    : RandomForestClassifier(
             n_estimators=200, random_state=RANDOM_STATE, n_jobs=-1),
@@ -162,14 +137,8 @@ def entrainer_modeles(X_train: np.ndarray, y_train: np.ndarray):
     meilleur.fit(X_train, y_train)
     return meilleur, meilleur_nom
 
-
-# ─────────────────────────────────────────────
-# 3. ÉVALUATION
-# ─────────────────────────────────────────────
-
 def evaluer(pipeline, X_test: np.ndarray, y_test: np.ndarray,
             le: LabelEncoder, nom_modele: str):
-    """Affiche les métriques et sauvegarde les graphiques."""
     y_pred  = pipeline.predict(X_test)
     classes = le.classes_
 
@@ -209,11 +178,6 @@ def evaluer(pipeline, X_test: np.ndarray, y_test: np.ndarray,
         plt.close()
         print("  → feature_importance.png sauvegardé")
 
-
-# ─────────────────────────────────────────────
-# 4. SAUVEGARDE / CHARGEMENT
-# ─────────────────────────────────────────────
-
 def sauvegarder(pipeline, le: LabelEncoder):
     with open(OUTPUT_MODEL, "wb") as f:
         pickle.dump(pipeline, f)
@@ -231,12 +195,7 @@ def charger():
     return pipeline, le
 
 
-# ─────────────────────────────────────────────
-# 5. PRÉDICTION SUR UN FICHIER ISOLÉ
-# ─────────────────────────────────────────────
-
 def predire(chemin_wav: str) -> str:
-    """Prédit l'espèce d'un fichier .wav avec le modèle sauvegardé."""
     pipeline, le = charger()
     feats = extraire_features(chemin_wav).reshape(1, -1)
     pred  = pipeline.predict(feats)[0]
@@ -250,16 +209,7 @@ def predire(chemin_wav: str) -> str:
         print(f"  {cls:30s} {barre} {p:.3f}")
     return label
 
-
-# ─────────────────────────────────────────────
-# POINT D'ENTRÉE
-# ─────────────────────────────────────────────
-
 if __name__ == "__main__":
-    print("=" * 55)
-    print("  IA'Hack 2026 — Partie 1 : Classification d'espèces")
-    print("=" * 55)
-
     # 1. Extraction train
     print(f"\n[1/4] Extraction des features — train ({TRAIN_DIR}) ...")
     df_train = construire_dataframe(TRAIN_DIR)
@@ -297,4 +247,4 @@ if __name__ == "__main__":
     # Sauvegarde
     sauvegarder(meilleur_pipeline, le)
 
-    print("\nPartie 1 terminée. Modèle prêt pour la Partie 2 (détection).")
+    print("\nFin de la partie 1")
