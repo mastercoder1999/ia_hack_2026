@@ -105,7 +105,7 @@ def lister_audio_files(root):
 
 def construire_dataframe(root):
     X, y = [], []
-
+    # Loop through all les fichiers audios et mettre la réponse dans un label lié à l'audio.
     for specie, files in lister_audio_files(root):
         label = LABEL_MAP.get(specie, specie)
         print(f"{label:30s} : {len(files)} fichiers")
@@ -117,11 +117,13 @@ def construire_dataframe(root):
             except Exception as e:
                 print(f"[ERREUR] {f} : {e}")
 
+    # Mettre features dans un dataframe et le retourner
     df = pd.DataFrame(X)
     df["label"] = y
     return df
 
 def get_models():
+    # Will return all MLs used for this project.
     return {
         "Random Forest": RandomForestClassifier(
             n_estimators=200, random_state=RANDOM_STATE, n_jobs=-1
@@ -227,12 +229,15 @@ def print_prediction(pred, proba, le):
 
 def main():
     print("[1] Loading data")
+    # contruire dataframe de train et test avec les images présentes
     df_train = construire_dataframe(TRAIN_DIR)
     df_test = construire_dataframe(TEST_DIR)
 
+    # Merge le data de train dans un labelEncoder
     le = LabelEncoder()
     le.fit(df_train["label"])
 
+    # Convertir Dataset dans un format que scikit peut lire
     X_train = df_train.drop(columns=["label"]).values
     y_train = le.transform(df_train["label"])
 
@@ -240,6 +245,7 @@ def main():
     y_test = le.transform(df_test["label"])
 
     print("[2] Training")
+    # Get models and evaluates them
     models = get_models()
     results = evaluate_models(models, X_train, y_train)
 
