@@ -1,4 +1,6 @@
-Matplotlib
-NumPy
+matplotlib
+numPy
 scikit-learn
-SciPy
+sciPy
+streamlit
+
