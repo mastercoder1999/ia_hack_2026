@@ -30,8 +30,8 @@ SAMPLE_RATE = 22050
 N_MFCC = 13
 RANDOM_STATE = 42
 
-OUTPUT_MODEL = "meilleur_modele.pkl"
-OUTPUT_ENCODER = "label_encoder.pkl"
+OUTPUT_MODEL = "meilleur_modele_part1.pkl"
+OUTPUT_ENCODER = "label_encoder_part1.pkl"
 
 LABEL_MAP = {
     "Beluga_WhiteWhale": "Béluga",
@@ -172,7 +172,7 @@ def plot_confusion(cm, classes, model_name):
                 xticklabels=classes, yticklabels=classes)
     plt.title(model_name)
     plt.tight_layout()
-    plt.savefig("confusion_matrix.png")
+    plt.savefig("confusion_matrix_part_1.png")
     plt.close()
 
 def plot_importance(clf):
