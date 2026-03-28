@@ -45,40 +45,40 @@ def extraire_features(path: str, sr=SAMPLE_RATE):
     y, sr = librosa.load(path, sr=sr, mono=True)
 
     def stats(x):
-        #np.mean =  the average value of each feature over the entire clip, np.std =  the standard deviation, capturing how much each feature varies over time
-        return np.mean(x, axis=-1), np.std(x, axis=-1)
+        mean = np.mean(x, axis=1) if x.ndim > 1 else np.array([np.mean(x)])
+        std  = np.std(x, axis=1)  if x.ndim > 1 else np.array([np.std(x)])
+        return np.concatenate([mean, std])
 
     feats = []
 
-    #computing the MFCCs
+    # MFCC
     mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=N_MFCC)
-    #computing the features of the MFCCs (mean and std) and adding them to the list of features
-    feats += list(stats(mfcc)[0]) + list(stats(mfcc)[1])
+    feats.extend(stats(mfcc))
 
-    # Features avec sr
+    # spectral features (avec sr)
     for func in [
-        #"brightness" of the sound,whale low/dolphin high
         librosa.feature.spectral_centroid,
-        #how spread out the frequencies are around that centroid, Narrow = tonal/pure tone, wide = noisy/complex
         librosa.feature.spectral_bandwidth,
     ]:
         f = func(y=y, sr=sr)
-        feats += list(stats(f))
+        feats.extend(stats(f))
 
-    #how often the signal flips from 0 to 1 over time
+    # sans sr
     zcr = librosa.feature.zero_crossing_rate(y)
-    feats += list(stats(zcr))
+    feats.extend(stats(zcr))
 
-    #how much loudness varies over time
     rms = librosa.feature.rms(y=y)
-    feats += list(stats(rms))
+    feats.extend(stats(rms))
 
-    #12 pitch classes tracked over time
+    # chroma
     chroma = librosa.feature.chroma_stft(y=y, sr=sr)
-    feats += list(stats(chroma)[0]) + list(stats(chroma)[1])
+    feats.extend(stats(chroma))
 
-    #its done and all in one place
-    return np.array(feats)
+    feats = np.array(feats)
+
+    assert feats.shape[0] == 58, f"Feature size mismatch: {feats.shape}"
+
+    return feats
 
 def lister_audio_files(root):
     for specie in sorted(os.listdir(root)):
