@@ -3,5 +3,5 @@ numPy
 scikit-learn
 sciPy
 streamlit
-datasets
-
+seaborn
+librosa
