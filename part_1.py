@@ -140,7 +140,7 @@ def get_models():
 
 def evaluate_models(models, X, y):
     results = {}
-
+    # For EVERY model : entourer dans une pipeline, evaluation avec f1, stocker mean et std des résultats
     for name, clf in models.items():
         pipe = Pipeline([("scaler", StandardScaler()), ("clf", clf)])
         scores = cross_val_score(pipe, X, y, cv=5, scoring="f1_macro")
@@ -156,6 +156,7 @@ def evaluate_models(models, X, y):
     return results
 
 def select_best(results):
+    # Compare les modèles selon le f1 et retourne le meilleur
     name = max(results, key=lambda k: results[k]["f1"])
     return name, results[name]["pipeline"]
 
@@ -189,6 +190,7 @@ def plot_importance(clf):
     plt.close()
 
 def evaluer(pipeline, X, y, le, name):
+    # Générer des prédictions à partir de la pipeline entraîné
     y_pred = pipeline.predict(X)
 
     metrics = compute_metrics(y, y_pred)
@@ -196,22 +198,26 @@ def evaluer(pipeline, X, y, le, name):
     print(f"\n{name}")
     print(metrics)
     print(classification_report(y, y_pred, target_names=le.classes_))
-
+    # rows = true labels, columns = predicted labels
     cm = confusion_matrix(y, y_pred)
     plot_confusion(cm, le.classes_, name)
     plot_importance(pipeline.named_steps["clf"])
 
 def save(pipeline, le):
+    # Sauvegarde du model.
     pickle.dump(pipeline, open(OUTPUT_MODEL, "wb"))
     pickle.dump(le, open(OUTPUT_ENCODER, "wb"))
 
 def load():
+    # Load le model.
     return (
         pickle.load(open(OUTPUT_MODEL, "rb")),
         pickle.load(open(OUTPUT_ENCODER, "rb")),
     )
 
 def predict_file(path):
+    # Seulement utiliser pour web.
+    # Load le modèle préfait pour faire de l'analyse de son manuelle.
     pipeline, le = load()
     x = extraire_features(path).reshape(1, -1)
 
@@ -248,14 +254,16 @@ def main():
     # Get models and evaluates them
     models = get_models()
     results = evaluate_models(models, X_train, y_train)
-
+    # Choisir le meilleur modèle selon les résultats
     best_name, best_pipe = select_best(results)
     best_pipe.fit(X_train, y_train)
 
     print("[3] Evaluation")
+    # Evaluation avec le meilleur pipeline
     evaluer(best_pipe, X_test, y_test, le, best_name)
 
     print("[4] Saving")
+    # Sauvegarde du Pipeline pour utilisation web
     save(best_pipe, le)
 
 if __name__ == "__main__":
