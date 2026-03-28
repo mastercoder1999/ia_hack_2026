@@ -23,228 +23,217 @@ from sklearn.model_selection import cross_val_score
 
 warnings.filterwarnings("ignore")
 
-TRAIN_DIR    = os.path.join("data", "train")
-TEST_DIR     = os.path.join("data", "test")
-SAMPLE_RATE  = 22050
-N_MFCC       = 13
+TRAIN_DIR = os.path.join("data", "train")
+TEST_DIR = os.path.join("data", "test")
+
+SAMPLE_RATE = 22050
+N_MFCC = 13
 RANDOM_STATE = 42
-OUTPUT_MODEL   = "meilleur_modele.pkl"
+
+OUTPUT_MODEL = "meilleur_modele.pkl"
 OUTPUT_ENCODER = "label_encoder.pkl"
 
-# Mapping nom de dossier → label lisible
 LABEL_MAP = {
-    "Beluga_WhiteWhale"  : "Béluga",
-    "Fin_FinbackWhale"   : "Rorqual commun",
-    "HumpbackWhale"      : "Baleine à bosse",
-    "SpermWhale"         : "Cachalot",
-    "White_sidedDolphin" : "Dauphin à flancs blancs",
+    "Beluga_WhiteWhale": "Béluga",
+    "Fin_FinbackWhale": "Rorqual commun",
+    "HumpbackWhale": "Baleine à bosse",
+    "SpermWhale": "Cachalot",
+    "White_sidedDolphin": "Dauphin à flancs blancs",
 }
 
-def extraire_features(chemin: str, sr: int = SAMPLE_RATE) -> np.ndarray:
-    y, sr = librosa.load(chemin, sr=sr, mono=True)
+def extraire_features(path: str, sr=SAMPLE_RATE):
+    y, sr = librosa.load(path, sr=sr, mono=True)
+
+    def stats(x):
+        return np.mean(x, axis=-1), np.std(x, axis=-1)
+
     feats = []
 
     mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=N_MFCC)
-    feats.extend(np.mean(mfcc, axis=1))
-    feats.extend(np.std(mfcc, axis=1))
+    feats += list(stats(mfcc)[0]) + list(stats(mfcc)[1])
 
-    centroide = librosa.feature.spectral_centroid(y=y, sr=sr)
-    feats += [np.mean(centroide), np.std(centroide)]
+    # Features avec sr
+    for func in [
+        librosa.feature.spectral_centroid,
+        librosa.feature.spectral_bandwidth,
+    ]:
+        f = func(y=y, sr=sr)
+        feats += list(stats(f))
 
-    bandwidth = librosa.feature.spectral_bandwidth(y=y, sr=sr)
-    feats += [np.mean(bandwidth), np.std(bandwidth)]
-
+    # Features sans sr
     zcr = librosa.feature.zero_crossing_rate(y)
-    feats += [np.mean(zcr), np.std(zcr)]
-
-    chroma = librosa.feature.chroma_stft(y=y, sr=sr)
-    feats.extend(np.mean(chroma, axis=1))
-    feats.extend(np.std(chroma, axis=1))
+    feats += list(stats(zcr))
 
     rms = librosa.feature.rms(y=y)
-    feats += [np.mean(rms), np.std(rms)]
+    feats += list(stats(rms))
+
+    chroma = librosa.feature.chroma_stft(y=y, sr=sr)
+    feats += list(stats(chroma)[0]) + list(stats(chroma)[1])
 
     return np.array(feats)
 
-def construire_dataframe(dossier_racine: str) -> pd.DataFrame:
-    enregistrements, labels = [], []
+def iter_audio_files(root):
+    for specie in sorted(os.listdir(root)):
+        d = os.path.join(root, specie)
+        if not os.path.isdir(d):
+            continue
 
-    especes = sorted([
-        d for d in os.listdir(dossier_racine)
-        if os.path.isdir(os.path.join(dossier_racine, d))
-    ])
-
-    if not especes:
-        raise FileNotFoundError(
-            f"Aucun sous-dossier dans '{dossier_racine}'. "
-            "Vérifie le chemin."
-        )
-
-    for espece in especes:
-        dossier = os.path.join(dossier_racine, espece)
-        fichiers = sorted([
-            f for f in os.listdir(dossier)
+        files = [
+            os.path.join(d, f)
+            for f in os.listdir(d)
             if f.lower().endswith(".wav")
-        ])
-        label = LABEL_MAP.get(espece, espece)
-        print(f"  → {label:30s} : {len(fichiers)} fichiers")
+        ]
 
-        for fichier in fichiers:
-            chemin = os.path.join(dossier, fichier)
+        yield specie, files
+
+def construire_dataframe(root):
+    X, y = [], []
+
+    for specie, files in iter_audio_files(root):
+        label = LABEL_MAP.get(specie, specie)
+        print(f"{label:30s} : {len(files)} fichiers")
+
+        for f in files:
             try:
-                enregistrements.append(extraire_features(chemin))
-                labels.append(label)
+                X.append(extraire_features(f))
+                y.append(label)
             except Exception as e:
-                print(f"     [ERREUR] {fichier} : {e}")
+                print(f"[ERREUR] {f} : {e}")
 
-    df = pd.DataFrame(enregistrements)
-    df.columns = [f"feat_{i}" for i in range(df.shape[1])]
-    df["label"] = labels
+    df = pd.DataFrame(X)
+    df["label"] = y
     return df
 
-def entrainer_modeles(X_train: np.ndarray, y_train: np.ndarray):
-    modeles = {
-        "Random Forest"    : RandomForestClassifier(
-            n_estimators=200, random_state=RANDOM_STATE, n_jobs=-1),
-        "SVM (RBF)"        : SVC(
+def get_models():
+    return {
+        "Random Forest": RandomForestClassifier(
+            n_estimators=200, random_state=RANDOM_STATE, n_jobs=-1
+        ),
+        "SVM (RBF)": SVC(
             kernel="rbf", C=10, gamma="scale",
-            probability=True, random_state=RANDOM_STATE),
-        "KNN (k=5)"        : KNeighborsClassifier(n_neighbors=5),
+            probability=True, random_state=RANDOM_STATE
+        ),
+        "KNN (k=5)": KNeighborsClassifier(n_neighbors=5),
         "Gradient Boosting": GradientBoostingClassifier(
-            n_estimators=100, learning_rate=0.1, random_state=RANDOM_STATE),
+            n_estimators=100, learning_rate=0.1, random_state=RANDOM_STATE
+        ),
     }
 
-    resultats = {}
-    print("\n  Cross-validation 5-fold (F1-macro) :")
+def evaluate_models(models, X, y):
+    results = {}
 
-    for nom, clf in modeles.items():
-        pipeline = Pipeline([("scaler", StandardScaler()), ("clf", clf)])
-        scores = cross_val_score(
-            pipeline, X_train, y_train,
-            cv=5, scoring="f1_macro", n_jobs=-1,
-        )
-        resultats[nom] = {
-            "pipeline": pipeline,
+    for name, clf in models.items():
+        pipe = Pipeline([("scaler", StandardScaler()), ("clf", clf)])
+        scores = cross_val_score(pipe, X, y, cv=5, scoring="f1_macro")
+
+        results[name] = {
+            "pipeline": pipe,
             "f1": scores.mean(),
             "std": scores.std(),
         }
-        print(f"    {nom:25s}  F1 = {scores.mean():.4f} ± {scores.std():.4f}")
 
-    meilleur_nom = max(resultats, key=lambda k: resultats[k]["f1"])
-    print(f"\n  → Meilleur modèle : {meilleur_nom}")
+        print(f"{name:25s} F1={scores.mean():.4f} ± {scores.std():.4f}")
 
-    meilleur = resultats[meilleur_nom]["pipeline"]
-    meilleur.fit(X_train, y_train)
-    return meilleur, meilleur_nom
+    return results
 
-def evaluer(pipeline, X_test: np.ndarray, y_test: np.ndarray,
-            le: LabelEncoder, nom_modele: str):
-    y_pred  = pipeline.predict(X_test)
-    classes = le.classes_
+def select_best(results):
+    name = max(results, key=lambda k: results[k]["f1"])
+    return name, results[name]["pipeline"]
 
-    acc = accuracy_score(y_test, y_pred)
-    f1  = f1_score(y_test, y_pred, average="macro")
+def compute_metrics(y_true, y_pred):
+    return {
+        "accuracy": accuracy_score(y_true, y_pred),
+        "f1": f1_score(y_true, y_pred, average="macro"),
+    }
 
-    print(f"\n=== Résultats test set — {nom_modele} ===")
-    print(f"  Accuracy  : {acc:.4f}")
-    print(f"  F1-macro  : {f1:.4f}")
-    print("\n" + classification_report(y_test, y_pred, target_names=classes))
-
-    # Matrice de confusion
-    cm = confusion_matrix(y_test, y_pred)
+def plot_confusion(cm, classes, model_name):
     plt.figure(figsize=(8, 6))
     sns.heatmap(cm, annot=True, fmt="d",
-                xticklabels=classes, yticklabels=classes, cmap="Blues")
-    plt.title(f"Matrice de confusion — {nom_modele}")
-    plt.ylabel("Vrai label")
-    plt.xlabel("Label prédit")
+                xticklabels=classes, yticklabels=classes)
+    plt.title(model_name)
     plt.tight_layout()
-    plt.savefig("confusion_matrix.png", dpi=150)
+    plt.savefig("confusion_matrix.png")
     plt.close()
-    print("  → confusion_matrix.png sauvegardé")
 
-    # Importance des features (Random Forest uniquement)
-    clf = pipeline.named_steps["clf"]
-    if hasattr(clf, "feature_importances_"):
-        imp = clf.feature_importances_
-        idx = np.argsort(imp)[::-1][:20]
-        plt.figure(figsize=(10, 4))
-        plt.bar(range(20), imp[idx])
-        plt.xticks(range(20), [f"feat_{i}" for i in idx],
-                   rotation=45, ha="right")
-        plt.title("Top 20 features les plus importantes")
-        plt.tight_layout()
-        plt.savefig("feature_importance.png", dpi=150)
-        plt.close()
-        print("  → feature_importance.png sauvegardé")
+def plot_importance(clf):
+    if not hasattr(clf, "feature_importances_"):
+        return
 
-def sauvegarder(pipeline, le: LabelEncoder):
-    with open(OUTPUT_MODEL, "wb") as f:
-        pickle.dump(pipeline, f)
-    with open(OUTPUT_ENCODER, "wb") as f:
-        pickle.dump(le, f)
-    print(f"\n  → {OUTPUT_MODEL} sauvegardé  (pipeline complet scaler + clf)")
-    print(f"  → {OUTPUT_ENCODER} sauvegardé")
+    imp = clf.feature_importances_
+    idx = np.argsort(imp)[::-1][:20]
 
+    plt.figure(figsize=(10, 4))
+    plt.bar(range(20), imp[idx])
+    plt.xticks(range(20), idx, rotation=45)
+    plt.tight_layout()
+    plt.savefig("feature_importance.png")
+    plt.close()
 
-def charger():
-    with open(OUTPUT_MODEL, "rb") as f:
-        pipeline = pickle.load(f)
-    with open(OUTPUT_ENCODER, "rb") as f:
-        le = pickle.load(f)
-    return pipeline, le
+def evaluer(pipeline, X, y, le, name):
+    y_pred = pipeline.predict(X)
 
+    metrics = compute_metrics(y, y_pred)
 
-def predire(chemin_wav: str) -> str:
-    pipeline, le = charger()
-    feats = extraire_features(chemin_wav).reshape(1, -1)
-    pred  = pipeline.predict(feats)[0]
-    proba = pipeline.predict_proba(feats)[0]
+    print(f"\n{name}")
+    print(metrics)
+    print(classification_report(y, y_pred, target_names=le.classes_))
+
+    cm = confusion_matrix(y, y_pred)
+    plot_confusion(cm, le.classes_, name)
+    plot_importance(pipeline.named_steps["clf"])
+
+def save(pipeline, le):
+    pickle.dump(pipeline, open(OUTPUT_MODEL, "wb"))
+    pickle.dump(le, open(OUTPUT_ENCODER, "wb"))
+
+def load():
+    return (
+        pickle.load(open(OUTPUT_MODEL, "rb")),
+        pickle.load(open(OUTPUT_ENCODER, "rb")),
+    )
+
+def predict_file(path):
+    pipeline, le = load()
+    x = extraire_features(path).reshape(1, -1)
+
+    pred = pipeline.predict(x)[0]
+    proba = pipeline.predict_proba(x)[0]
+
+    return pred, proba, le
+
+def print_prediction(pred, proba, le):
     label = le.inverse_transform([pred])[0]
+    print(f"Prediction: {label}")
 
-    print(f"\nFichier : {chemin_wav}")
-    print(f"Espèce prédite : {label}")
     for cls, p in zip(le.classes_, proba):
-        barre = "█" * int(p * 30)
-        print(f"  {cls:30s} {barre} {p:.3f}")
-    return label
+        print(f"{cls:30s} {'█'*int(p*30)} {p:.3f}")
 
-if __name__ == "__main__":
-    # 1. Extraction train
-    print(f"\n[1/4] Extraction des features — train ({TRAIN_DIR}) ...")
+def main():
+    print("[1] Loading data")
     df_train = construire_dataframe(TRAIN_DIR)
-    print(f"  → {df_train.shape[0]} échantillons · {df_train.shape[1]-1} features")
-
-    # 2. Extraction test
-    print(f"\n[2/4] Extraction des features — test ({TEST_DIR}) ...")
     df_test = construire_dataframe(TEST_DIR)
-    print(f"  → {df_test.shape[0]} échantillons · {df_test.shape[1]-1} features")
 
-    # Encodage des labels (fit uniquement sur train)
     le = LabelEncoder()
     le.fit(df_train["label"])
 
     X_train = df_train.drop(columns=["label"]).values
-    y_train = le.transform(df_train["label"].values)
-    X_test  = df_test.drop(columns=["label"]).values
-    y_test  = le.transform(df_test["label"].values)
+    y_train = le.transform(df_train["label"])
 
-    print(f"\n  Classes : {list(le.classes_)}")
+    X_test = df_test.drop(columns=["label"]).values
+    y_test = le.transform(df_test["label"])
 
-    # Sauvegarde CSV optionnelle
-    df_train.to_csv("features_train.csv", index=False)
-    df_test.to_csv("features_test.csv",   index=False)
-    print("  → features_train.csv / features_test.csv sauvegardés")
+    print("[2] Training")
+    models = get_models()
+    results = evaluate_models(models, X_train, y_train)
 
-    # 3. Entraînement + sélection
-    print("\n[3/4] Entraînement et sélection du modèle ...")
-    meilleur_pipeline, meilleur_nom = entrainer_modeles(X_train, y_train)
+    best_name, best_pipe = select_best(results)
+    best_pipe.fit(X_train, y_train)
 
-    # 4. Évaluation
-    print("\n[4/4] Évaluation sur le test set ...")
-    evaluer(meilleur_pipeline, X_test, y_test, le, meilleur_nom)
+    print("[3] Evaluation")
+    evaluer(best_pipe, X_test, y_test, le, best_name)
 
-    # Sauvegarde
-    sauvegarder(meilleur_pipeline, le)
+    print("[4] Saving")
+    save(best_pipe, le)
 
-    print("\nFin de la partie 1")
+if __name__ == "__main__":
+    main()
