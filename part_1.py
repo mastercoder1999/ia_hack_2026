@@ -86,11 +86,15 @@ def extraire_features(path: str, sr=SAMPLE_RATE):
     return feats
 
 def lister_audio_files(root):
+    #Looping over species folders
     for specie in sorted(os.listdir(root)):
+        #building the full path to the respective species folder
         d = os.path.join(root, specie)
+        #skips over non important folders
         if not os.path.isdir(d):
             continue
 
+        #collecting .wav files
         files = [
             os.path.join(d, f)
             for f in os.listdir(d)
