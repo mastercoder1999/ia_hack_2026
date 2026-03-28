@@ -109,9 +109,6 @@ with tab2:
             st.subheader("Confusion Matrix")
             st.pyplot(fig)
 
-# ─────────────────────────────
-# TAB 3 — ABOUT
-# ─────────────────────────────
 with tab3:
     st.header("Project Overview")
 

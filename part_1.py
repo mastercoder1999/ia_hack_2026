@@ -81,7 +81,7 @@ def extraire_features(path: str, sr=SAMPLE_RATE):
 
     return feats
 
-def iter_audio_files(root):
+def lister_audio_files(root):
     for specie in sorted(os.listdir(root)):
         d = os.path.join(root, specie)
         if not os.path.isdir(d):
@@ -98,7 +98,7 @@ def iter_audio_files(root):
 def construire_dataframe(root):
     X, y = [], []
 
-    for specie, files in iter_audio_files(root):
+    for specie, files in lister_audio_files(root):
         label = LABEL_MAP.get(specie, specie)
         print(f"{label:30s} : {len(files)} fichiers")
 
