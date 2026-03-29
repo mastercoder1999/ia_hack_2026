@@ -1,8 +1,7 @@
 fichier,species,t_start,t_end,duration,mean_confidence
-sequence_13.wav,Baleine à bosse,29.0,30.0,1.0,0.921
-sequence_13.wav,Baleine à bosse,31.0,32.0,1.0,0.91
-sequence_13.wav,Baleine à bosse,39.0,40.0,1.0,0.962
-sequence_13.wav,Baleine à bosse,45.25,47.75,2.5,0.935
-sequence_13.wav,Baleine à bosse,48.75,49.75,1.0,0.87
-sequence_13.wav,Baleine à bosse,50.5,51.5,1.0,0.864
-sequence_13.wav,Cachalot,220.23,221.23,1.0,0.566
+sequence_13.wav,Baleine à bosse,27.5,33.0,5.5,0.668
+sequence_13.wav,Baleine à bosse,38.0,42.0,4.0,0.677
+sequence_13.wav,Baleine à bosse,44.0,52.5,8.5,0.675
+sequence_13.wav,Baleine à bosse,73.0,75.5,2.5,0.614
+sequence_13.wav,Cachalot,105.0,109.0,4.0,0.575
+sequence_13.wav,Baleine à bosse,218.0,222.0,4.0,0.644
