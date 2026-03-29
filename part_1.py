@@ -23,8 +23,8 @@ from sklearn.model_selection import cross_val_score
 
 warnings.filterwarnings("ignore")
 
-TRAIN_DIR = os.path.join("data", "train")
-TEST_DIR = os.path.join("data", "test")
+TRAIN_DIR = os.path.join("data", "part_1", "train")
+TEST_DIR = os.path.join("data", "part_1", "test")
 
 SAMPLE_RATE = 22050
 N_MFCC = 13

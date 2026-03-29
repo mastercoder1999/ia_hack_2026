@@ -26,8 +26,8 @@ warnings.filterwarnings("ignore")
 
 # Paths & constants
 
-TRAIN_DIR = os.path.join("data", "train")
-TEST_DIR  = os.path.join("data", "test")
+TRAIN_DIR = os.path.join("data", "part_2", "train")
+TEST_DIR  = os.path.join("data", "part_2", "test")
 
 SAMPLE_RATE  = 22050
 N_MFCC       = 13
