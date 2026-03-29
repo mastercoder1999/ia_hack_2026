@@ -185,6 +185,7 @@ def compute_metrics(y_true, y_pred):
 
 def plot_confusion(cm, classes, model_name):
     plt.figure(figsize=(9, 7))
+
     sns.heatmap(
         cm,
         annot=True,
@@ -193,12 +194,14 @@ def plot_confusion(cm, classes, model_name):
         yticklabels=classes,
         cmap="Blues",
     )
+
     plt.title(f"Matrice de confusion – {model_name}")
     plt.ylabel("Vrai label")
     plt.xlabel("Prédit")
+
     plt.tight_layout()
-    plt.savefig("confusion_matrix_part2.png", dpi=150)
-    plt.close()
+
+    plt.show()
 
 
 def plot_importance(clf):

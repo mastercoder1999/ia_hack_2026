@@ -37,5 +37,6 @@ python3 part_2_Maksim.py "/home/toko/Documents/GitHub/ia_hack_2026/data/part_2/t
 ### Cas Web
 L'interface web utilise les deux parties pour faire un affichage complet des deux parties dans une belle page web
 ```
-python3 web.py
+streamlit run web.py
+
 ```

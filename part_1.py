@@ -169,12 +169,22 @@ def compute_metrics(y_true, y_pred):
 
 def plot_confusion(cm, classes, model_name):
     plt.figure(figsize=(8, 6))
-    sns.heatmap(cm, annot=True, fmt="d",
-                xticklabels=classes, yticklabels=classes)
+
+    sns.heatmap(
+        cm,
+        annot=True,
+        fmt="d",
+        xticklabels=classes,
+        yticklabels=classes
+    )
+
     plt.title(model_name)
+    plt.xlabel("Prédit")
+    plt.ylabel("Vrai")
+
     plt.tight_layout()
-    plt.savefig("confusion_matrix_part_1.png")
-    plt.close()
+
+    plt.show()
 
 def plot_importance(clf):
     if not hasattr(clf, "feature_importances_"):
