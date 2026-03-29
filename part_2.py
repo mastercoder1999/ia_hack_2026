@@ -27,13 +27,13 @@ warnings.filterwarnings("ignore")
 # Paths & constants
 
 TRAIN_DIR = os.path.join("data", "part_2", "train")
-TEST_DIR  = os.path.join("data", "part_2", "test")
+TEST_DIR = os.path.join("data", "part_2", "test")
 
-SAMPLE_RATE  = 22050
-N_MFCC       = 13
-RANDOM_STATE = 42
+SAMPLE_RATE = 22050
+N_MFCC = 13
+RANDOM_STATE = 69
 
-OUTPUT_MODEL   = "meilleur_modele_part2.pkl"
+OUTPUT_MODEL = "meilleur_modele_part2.pkl"
 OUTPUT_ENCODER = "label_encoder_part2.pkl"
 
 # folder where all per-sequence CSVs and the merged CSV will be saved
@@ -42,19 +42,19 @@ ANNOTATIONS_DIR = "annotations_after_training"
 NOISE_LABEL = "Bruit"
 
 LABEL_MAP = {
-    "Beluga_WhiteWhale":  "Béluga",
-    "Fin_FinbackWhale":   "Rorqual commun",
-    "HumpbackWhale":      "Baleine à bosse",
-    "SpermWhale":         "Cachalot",
+    "Beluga_WhiteWhale": "Béluga",
+    "Fin_FinbackWhale": "Rorqual commun",
+    "HumpbackWhale": "Baleine à bosse",
+    "SpermWhale": "Cachalot",
     "White_sidedDolphin": "Dauphin à flancs blancs",
 }
 # Any folder not listed above is treated as noise.
 
-#Sliding-window settings for long audio detection
+# Sliding-window settings for long audio detection
 
-WINDOW_SEC   = 3.0   # length of each analysis window (seconds)
-HOP_SEC      = 1.0   # step between consecutive windows (seconds)
-MIN_CONF     = 0.55  # minimum confidence to accept a prediction (not noise)
+WINDOW_SEC = 3.0     # length of each analysis window (seconds)
+HOP_SEC = 1.0        # step between consecutive windows (seconds)
+MIN_CONF = 0.55      # minimum confidence to accept a prediction (not noise)
 MIN_CALL_SEC = 1.5   # merge gaps shorter than this (seconds) within the same species
 
 # folder that contains the long audio sequences to analyse
@@ -74,7 +74,7 @@ def extraire_features(path: str = None, y: np.ndarray = None, sr: int = SAMPLE_R
     # np.mean = the average value of each feature over the entire clip, np.std = the standard deviation, capturing how much each feature varies over time
     def stats(x):
         mean = np.mean(x, axis=1) if x.ndim > 1 else np.array([np.mean(x)])
-        std  = np.std(x,  axis=1) if x.ndim > 1 else np.array([np.std(x)])
+        std = np.std(x, axis=1) if x.ndim > 1 else np.array([np.std(x)])
         return np.concatenate([mean, std])
 
     feats = []
@@ -108,14 +108,14 @@ def extraire_features(path: str = None, y: np.ndarray = None, sr: int = SAMPLE_R
 # Dataset construction
 
 def lister_audio_files(root):
-    #Looping over species folders
+    # Looping over species folders
     for specie in sorted(os.listdir(root)):
-        #building the full path to the respective species folder
+        # building the full path to the respective species folder
         d = os.path.join(root, specie)
-        #skips over non important folders
+        # skips over non important folders
         if not os.path.isdir(d):
             continue
-        #collecting .wav files
+        # collecting .wav files
         files = [os.path.join(d, f) for f in os.listdir(d)
                  if f.lower().endswith(".wav")]
         yield specie, files
@@ -153,7 +153,7 @@ def get_models():
 def evaluate_models(models, X, y):
     results = {}
     for name, clf in models.items():
-        pipe   = Pipeline([("scaler", StandardScaler()), ("clf", clf)])
+        pipe = Pipeline([("scaler", StandardScaler()), ("clf", clf)])
         scores = cross_val_score(pipe, X, y, cv=5, scoring="jaccard_macro")
         results[name] = {"pipeline": pipe, "f1": scores.mean(), "std": scores.std()}
         print(f"  {name:25s}  Jaccard={scores.mean():.4f} ± {scores.std():.4f}")
@@ -199,7 +199,7 @@ def plot_importance(clf):
 
 
 def evaluer(pipeline, X, y, le, name):
-    y_pred  = pipeline.predict(X)
+    y_pred = pipeline.predict(X)
     metrics = compute_metrics(y, y_pred)
     print(f"\n{'='*55}")
     print(f"  Meilleur modèle : {name}")
@@ -211,46 +211,43 @@ def evaluer(pipeline, X, y, le, name):
 
 
 def save(pipeline, le):
-    pickle.dump(pipeline, open(OUTPUT_MODEL,   "wb"))
-    pickle.dump(le,       open(OUTPUT_ENCODER, "wb"))
+    pickle.dump(pipeline, open(OUTPUT_MODEL, "wb"))
+    pickle.dump(le, open(OUTPUT_ENCODER, "wb"))
 
 
 def load():
     return (
-        pickle.load(open(OUTPUT_MODEL,   "rb")),
+        pickle.load(open(OUTPUT_MODEL, "rb")),
         pickle.load(open(OUTPUT_ENCODER, "rb")),
     )
 
 
 # Sliding window detection on long audio
 
-def _windows(y: np.ndarray, sr: int,
-    window_sec: float = WINDOW_SEC,
-    hop_sec:    float = HOP_SEC):
+def _windows(y: np.ndarray, sr: int, window_sec: float = WINDOW_SEC, hop_sec: float = HOP_SEC):
     win_samples = int(window_sec * sr)
-    hop_samples = int(hop_sec    * sr)
-    n_samples   = len(y)
+    hop_samples = int(hop_sec * sr)
+    n_samples = len(y)
 
     start = 0
     while start + win_samples <= n_samples:
-        chunk   = y[start : start + win_samples]
+        chunk = y[start : start + win_samples]
         t_start = start / sr
-        t_end   = (start + win_samples) / sr
+        t_end = (start + win_samples) / sr
         yield t_start, t_end, chunk
         start += hop_samples
 
     # last partial window (if anything is left)
     if start < n_samples:
-        chunk   = y[start:]
+        chunk = y[start:]
         t_start = start / sr
-        t_end   = n_samples / sr
+        t_end = n_samples / sr
         # zero-pad to guarantee feature extraction works
-        chunk   = np.pad(chunk, (0, win_samples - len(chunk)))
+        chunk = np.pad(chunk, (0, win_samples - len(chunk)))
         yield t_start, t_end, chunk
 
 
-def _merge_detections(detections: list,
-                      min_gap_sec: float = MIN_CALL_SEC) -> list:
+def _merge_detections(detections: list, min_gap_sec: float = MIN_CALL_SEC) -> list:
     # if specie detected in back to back window with gap shorter then "min_gap_sec", make it one continuous call segment, else start new segment
     if not detections:
         return []
@@ -260,11 +257,11 @@ def _merge_detections(detections: list,
 
     for d in detections[1:]:
         same_species = d["label"] == cur["label"]
-        small_gap    = (d["t_start"] - cur["t_end"]) <= min_gap_sec
+        small_gap = (d["t_start"] - cur["t_end"]) <= min_gap_sec
 
         if same_species and small_gap:
             # extend current segment
-            cur["t_end"]      = d["t_end"]
+            cur["t_end"] = d["t_end"]
             cur["confidences"].append(d["confidence"])
         else:
             segments.append(cur)
@@ -277,10 +274,10 @@ def _merge_detections(detections: list,
     for seg in segments:
         confs = seg.get("confidences", [seg["confidence"]])
         results.append({
-            "species":         seg["label"],
-            "t_start":         round(seg["t_start"], 2),
-            "t_end":           round(seg["t_end"],   2),
-            "duration":        round(seg["t_end"] - seg["t_start"], 2),
+            "species": seg["label"],
+            "t_start": round(seg["t_start"], 2),
+            "t_end": round(seg["t_end"], 2),
+            "duration": round(seg["t_end"] - seg["t_start"], 2),
             "mean_confidence": round(float(np.mean(confs)), 3),
         })
 
@@ -288,14 +285,14 @@ def _merge_detections(detections: list,
 
 
 def detect_long_audio(
-    path:        str,
-    window_sec:  float = WINDOW_SEC,
-    hop_sec:     float = HOP_SEC,
-    min_conf:    float = MIN_CONF,
-    min_call_sec:float = MIN_CALL_SEC,
-    verbose:     bool  = True,
+    path: str,
+    window_sec: float = WINDOW_SEC,
+    hop_sec: float = HOP_SEC,
+    min_conf: float = MIN_CONF,
+    min_call_sec: float = MIN_CALL_SEC,
+    verbose: bool = True,
 ):
-    #this function returns a panda dataframe
+    # this function returns a panda dataframe
     pipeline, le = load()
 
     if verbose:
@@ -303,7 +300,7 @@ def detect_long_audio(
         print(f"  fenêtre={window_sec}s | hop={hop_sec}s | seuil={min_conf}")
 
     y_full, sr = librosa.load(path, sr=SAMPLE_RATE, mono=True)
-    total_sec  = len(y_full) / sr
+    total_sec = len(y_full) / sr
 
     if verbose:
         print(f"  Durée totale : {total_sec:.1f}s ({total_sec/60:.2f} min)")
@@ -318,20 +315,20 @@ def detect_long_audio(
                 print(f"  [ERREUR feature] t={t_start:.1f}s : {e}")
             continue
 
-        label_idx  = pipeline.predict(feats)[0]
-        proba      = pipeline.predict_proba(feats)[0]
+        label_idx = pipeline.predict(feats)[0]
+        proba = pipeline.predict_proba(feats)[0]
         confidence = float(proba[label_idx])
-        label      = le.inverse_transform([label_idx])[0]
+        label = le.inverse_transform([label_idx])[0]
 
         # Discard noise windows and low-confidence windows
         if label == NOISE_LABEL or confidence < min_conf:
             continue
 
         raw_detections.append({
-            "t_start":     t_start,
-            "t_end":       t_end,
-            "label":       label,
-            "confidence":  confidence,
+            "t_start": t_start,
+            "t_end": t_end,
+            "label": label,
+            "confidence": confidence,
             "confidences": [confidence],
         })
 
@@ -352,41 +349,40 @@ def detect_long_audio(
 # Timeline plot
 
 _SPECIES_COLOURS = {
-    "Béluga":                    "#4e9af1",
-    "Rorqual commun":            "#f4a261",
-    "Baleine à bosse":           "#2a9d8f",
-    "Cachalot":                  "#e76f51",
-    "Dauphin à flancs blancs":   "#8ecae6",
+    "Béluga": "#4e9af1",
+    "Rorqual commun": "#f4a261",
+    "Baleine à bosse": "#2a9d8f",
+    "Cachalot": "#e76f51",
+    "Dauphin à flancs blancs": "#8ecae6",
 }
 _DEFAULT_COLOUR = "#aaa"
 
 
-def plot_timeline(df: pd.DataFrame, audio_path: str,
-                  total_sec: float = None, save_path: str = "timeline.png"):
-    #Draw a horizontal timeline showing where each species call was detected.
+def plot_timeline(df: pd.DataFrame, audio_path: str, total_sec: float = None, save_path: str = "timeline.png"):
+    # Draw a horizontal timeline showing where each species call was detected.
     if df.empty:
         return
 
     if total_sec is None:
-        y, sr  = librosa.load(audio_path, sr=SAMPLE_RATE, mono=True)
+        y, sr = librosa.load(audio_path, sr=SAMPLE_RATE, mono=True)
         total_sec = len(y) / sr
 
     species_list = df["species"].unique().tolist()
-    y_pos        = {sp: i for i, sp in enumerate(species_list)}
+    y_pos = {sp: i for i, sp in enumerate(species_list)}
 
     fig, ax = plt.subplots(figsize=(14, max(3, len(species_list) * 1.4)))
 
     for _, row in df.iterrows():
         colour = _SPECIES_COLOURS.get(row["species"], _DEFAULT_COLOUR)
         ax.barh(
-            y         = y_pos[row["species"]],
-            width     = row["duration"],
-            left      = row["t_start"],
-            height    = 0.6,
-            color     = colour,
-            alpha     = 0.85,
-            edgecolor = "white",
-            linewidth = 0.5,
+            y=y_pos[row["species"]],
+            width=row["duration"],
+            left=row["t_start"],
+            height=0.6,
+            color=colour,
+            alpha=0.85,
+            edgecolor="white",
+            linewidth=0.5,
         )
         # label the bar
         if row["duration"] > total_sec * 0.015:
@@ -403,7 +399,7 @@ def plot_timeline(df: pd.DataFrame, audio_path: str,
     ax.set_yticklabels(list(y_pos.keys()))
 
     # minutes on x-axis
-    max_min   = int(total_sec // 60) + 1
+    max_min = int(total_sec // 60) + 1
     tick_secs = [m * 60 for m in range(max_min + 1) if m * 60 <= total_sec]
     ax.set_xticks(tick_secs)
     ax.set_xticklabels([f"{t//60:.0f}:{t%60:02.0f}" for t in tick_secs])
@@ -412,8 +408,7 @@ def plot_timeline(df: pd.DataFrame, audio_path: str,
     ax.set_title(f"Détection d'appels – {os.path.basename(audio_path)}")
     ax.grid(axis="x", linestyle="--", alpha=0.4)
 
-    patches = [mpatches.Patch(color=_SPECIES_COLOURS.get(sp, _DEFAULT_COLOUR),
-                               label=sp) for sp in species_list]
+    patches = [mpatches.Patch(color=_SPECIES_COLOURS.get(sp, _DEFAULT_COLOUR), label=sp) for sp in species_list]
     ax.legend(handles=patches, loc="upper right", fontsize=8)
 
     plt.tight_layout()
@@ -445,22 +440,22 @@ def main():
     # 1. Build datasets
     print("\n[1] Chargement des données")
     df_train = construire_dataframe(TRAIN_DIR)
-    df_test  = construire_dataframe(TEST_DIR)
+    df_test = construire_dataframe(TEST_DIR)
 
     le = LabelEncoder()
     le.fit(df_train["label"])
 
     X_train = df_train.drop(columns=["label"]).values
     y_train = le.transform(df_train["label"])
-    X_test  = df_test.drop(columns=["label"]).values
-    y_test  = le.transform(df_test["label"])
+    X_test = df_test.drop(columns=["label"]).values
+    y_test = le.transform(df_test["label"])
 
     print(f"\n  Classes : {list(le.classes_)}")
     print(f"  Train : {X_train.shape[0]} échantillons | Test : {X_test.shape[0]}")
 
     # 2. Train & cross-validate
     print("\n[2] Entraînement (cross-validation 5-fold)")
-    models  = get_models()
+    models = get_models()
     results = evaluate_models(models, X_train, y_train)
 
     best_name, best_pipe = select_best(results)
@@ -507,7 +502,7 @@ def main():
             all_detections.append(df_results)
 
             # save a per-sequence CSV in the annotations folder
-            stem     = os.path.splitext(os.path.basename(audio_path))[0]
+            stem = os.path.splitext(os.path.basename(audio_path))[0]
             csv_path = os.path.join(ANNOTATIONS_DIR, f"{stem}_detections.csv")
             df_results.to_csv(csv_path, index=False)
 
