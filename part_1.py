@@ -1,4 +1,5 @@
 import os
+import sys
 import warnings
 import pickle
 
@@ -23,8 +24,8 @@ from sklearn.model_selection import cross_val_score
 
 warnings.filterwarnings("ignore")
 
-TRAIN_DIR = os.path.join("data", "part_1", "train")
-TEST_DIR = os.path.join("data", "part_1", "test")
+#TRAIN_DIR = os.path.join("data", "part_1", "train")
+#TEST_DIR = os.path.join("data", "part_1", "test")
 
 SAMPLE_RATE = 22050
 N_MFCC = 13
@@ -234,6 +235,12 @@ def print_prediction(pred, proba, label):
         print(f"{cls:30s} {'█'*int(p*30)} {p:.3f}")
 
 def main():
+    if len(sys.argv) != 3:
+        print("Usage: python3 part_1.py <train_dir> <test_dir>")
+        sys.exit(1)
+
+    TRAIN_DIR = sys.argv[1]
+    TEST_DIR = sys.argv[2]
     print("[1] Loading data")
     # contruire dataframe de train et test avec les images présentes
     df_train = construire_dataframe(TRAIN_DIR)

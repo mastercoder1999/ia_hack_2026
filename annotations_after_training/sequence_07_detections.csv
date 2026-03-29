@@ -1,11 +1,10 @@
 fichier,species,t_start,t_end,duration,mean_confidence
-sequence_07.wav,Baleine à bosse,24.0,27.5,3.5,0.619
-sequence_07.wav,Baleine à bosse,35.5,39.0,3.5,0.613
-sequence_07.wav,Baleine à bosse,44.5,47.5,3.0,0.624
-sequence_07.wav,Baleine à bosse,56.49,60.24,3.75,0.624
-sequence_07.wav,Baleine à bosse,63.99,68.24,4.25,0.619
-sequence_07.wav,Baleine à bosse,92.99,97.49,4.5,0.61
-sequence_07.wav,Baleine à bosse,116.99,120.49,3.5,0.59
-sequence_07.wav,Baleine à bosse,130.74,133.49,2.75,0.602
-sequence_07.wav,Baleine à bosse,140.74,145.49,4.75,0.624
-sequence_07.wav,Baleine à bosse,185.98,187.48,1.5,0.62
+sequence_07.wav,Baleine à bosse,24.0,27.5,3.5,0.63
+sequence_07.wav,Baleine à bosse,35.5,39.0,3.5,0.624
+sequence_07.wav,Baleine à bosse,44.5,47.5,3.0,0.634
+sequence_07.wav,Baleine à bosse,56.49,60.24,3.75,0.635
+sequence_07.wav,Baleine à bosse,63.99,68.24,4.25,0.63
+sequence_07.wav,Baleine à bosse,92.99,97.49,4.5,0.619
+sequence_07.wav,Baleine à bosse,116.74,120.49,3.75,0.597
+sequence_07.wav,Baleine à bosse,130.74,133.74,3.0,0.609
+sequence_07.wav,Baleine à bosse,140.74,145.49,4.75,0.634

@@ -1,4 +1,5 @@
 import os
+import sys
 import warnings
 import pickle
 
@@ -26,8 +27,9 @@ from sklearn.model_selection import cross_val_score
 warnings.filterwarnings("ignore")
 
 # Paths & constants
-TRAIN_DIR = os.path.join("data", "part_2", "train")
-TEST_DIR = os.path.join("data", "part_2", "test")
+# TRAIN_DIR = os.path.join("data", "part_2", "train")
+# TEST_DIR = os.path.join("data", "part_2", "test")
+# LONG_AUDIO_DIR = os.path.join("data", "long_audio", "audio")
 
 SAMPLE_RATE = 22050
 N_MFCC = 13
@@ -53,8 +55,6 @@ WINDOW_SEC = 1.5
 HOP_SEC = 0.25
 MIN_CONF = 0.5
 MIN_CALL_SEC = 1.0
-
-LONG_AUDIO_DIR = os.path.join("data", "long_audio", "audio")
 
 
 # Feature extraction
@@ -507,10 +507,19 @@ def afficher_resultats(df: pd.DataFrame):
         )
 
     print(f"{'─' * 65}")
-    print(f"  Total : {len(df)} appel(s) détecté(s)\n")
+    print(f"  Total : {len(df)} animaux détectés\n")
 
 
 def main():
+
+    if len(sys.argv) != 4:
+        print("Usage: python3 part_2.py <train_dir> <test_dir> <long_audio_dir>")
+        sys.exit(1)
+
+    TRAIN_DIR = sys.argv[1]
+    TEST_DIR = sys.argv[2]
+    LONG_AUDIO_DIR = sys.argv[3]
+
     print("\n[1] Chargement des données")
     df_train = construire_dataframe_windows(TRAIN_DIR)
     df_test = construire_dataframe_windows(TEST_DIR)
