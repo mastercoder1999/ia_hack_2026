@@ -1,6 +1,8 @@
 fichier,species,t_start,t_end,duration,mean_confidence
-sequence_17.wav,Baleine à bosse,0.0,3.0,3.0,0.581
-sequence_17.wav,Baleine à bosse,8.0,24.0,16.0,0.666
-sequence_17.wav,Baleine à bosse,132.0,138.0,6.0,0.744
-sequence_17.wav,Baleine à bosse,173.0,194.0,21.0,0.768
-sequence_17.wav,Baleine à bosse,233.0,235.0,2.0,0.755
+sequence_17.wav,Baleine à bosse,0.0,2.0,2.0,0.844
+sequence_17.wav,Baleine à bosse,15.25,17.25,2.0,0.665
+sequence_17.wav,Baleine à bosse,20.75,22.75,2.0,0.642
+sequence_17.wav,Baleine à bosse,132.74,136.99,4.25,0.72
+sequence_17.wav,Baleine à bosse,174.98,176.98,2.0,0.783
+sequence_17.wav,Baleine à bosse,178.48,187.73,9.25,0.907
+sequence_17.wav,Baleine à bosse,190.23,192.23,2.0,0.989

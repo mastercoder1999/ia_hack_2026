@@ -1,11 +1,9 @@
 fichier,species,t_start,t_end,duration,mean_confidence
-sequence_07.wav,Baleine à bosse,14.0,17.0,3.0,0.552
-sequence_07.wav,Baleine à bosse,23.0,28.0,5.0,0.688
-sequence_07.wav,Baleine à bosse,56.0,61.0,5.0,0.726
-sequence_07.wav,Baleine à bosse,66.0,69.0,3.0,0.613
-sequence_07.wav,Béluga,116.0,120.0,4.0,0.682
-sequence_07.wav,Baleine à bosse,118.0,121.0,3.0,0.566
-sequence_07.wav,Baleine à bosse,130.0,135.0,5.0,0.761
-sequence_07.wav,Baleine à bosse,141.0,146.0,5.0,0.822
-sequence_07.wav,Baleine à bosse,184.0,187.0,3.0,0.594
-sequence_07.wav,Baleine à bosse,197.0,199.0,2.0,0.746
+sequence_07.wav,Baleine à bosse,17.5,18.5,1.0,0.96
+sequence_07.wav,Béluga,45.0,46.0,1.0,0.904
+sequence_07.wav,Béluga,64.74,65.74,1.0,0.537
+sequence_07.wav,Béluga,66.49,67.49,1.0,0.628
+sequence_07.wav,Béluga,117.99,120.24,2.25,0.766
+sequence_07.wav,Baleine à bosse,131.49,132.49,1.0,0.991
+sequence_07.wav,Baleine à bosse,141.99,144.24,2.25,0.913
+sequence_07.wav,Baleine à bosse,198.23,199.0,0.77,0.918

@@ -1,4 +1,4 @@
 fichier,species,t_start,t_end,duration,mean_confidence
-sequence_22.wav,Baleine à bosse,24.0,29.0,5.0,0.678
-sequence_22.wav,Baleine à bosse,88.0,100.0,12.0,0.735
-sequence_22.wav,Baleine à bosse,216.0,218.0,2.0,0.754
+sequence_22.wav,Béluga,25.0,27.0,2.0,0.884
+sequence_22.wav,Baleine à bosse,88.99,90.99,2.0,0.901
+sequence_22.wav,Baleine à bosse,95.24,97.24,2.0,0.739

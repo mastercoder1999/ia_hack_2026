@@ -1,117 +1,109 @@
 fichier,species,t_start,t_end,duration,mean_confidence
-sequence_06.wav,Baleine à bosse,19.0,22.0,3.0,0.693
-sequence_06.wav,Baleine à bosse,24.0,36.0,12.0,0.77
-sequence_06.wav,Béluga,61.0,64.0,3.0,0.687
-sequence_06.wav,Baleine à bosse,77.0,83.0,6.0,0.829
-sequence_06.wav,Baleine à bosse,175.0,186.0,11.0,0.808
-sequence_06.wav,Baleine à bosse,220.0,224.0,4.0,0.643
-sequence_06.wav,Baleine à bosse,242.0,244.0,2.0,0.754
-sequence_07.wav,Baleine à bosse,14.0,17.0,3.0,0.551
-sequence_07.wav,Baleine à bosse,23.0,28.0,5.0,0.692
-sequence_07.wav,Baleine à bosse,56.0,61.0,5.0,0.73
-sequence_07.wav,Baleine à bosse,66.0,69.0,3.0,0.608
-sequence_07.wav,Béluga,116.0,120.0,4.0,0.684
-sequence_07.wav,Baleine à bosse,118.0,121.0,3.0,0.563
-sequence_07.wav,Baleine à bosse,130.0,135.0,5.0,0.764
-sequence_07.wav,Baleine à bosse,141.0,146.0,5.0,0.822
-sequence_07.wav,Baleine à bosse,184.0,187.0,3.0,0.587
-sequence_07.wav,Baleine à bosse,197.0,199.0,2.0,0.753
-sequence_10.wav,Baleine à bosse,9.0,12.0,3.0,0.693
-sequence_10.wav,Baleine à bosse,15.0,18.0,3.0,0.677
-sequence_10.wav,Baleine à bosse,31.0,37.0,6.0,0.759
-sequence_10.wav,Baleine à bosse,53.0,58.0,5.0,0.75
-sequence_10.wav,Baleine à bosse,74.0,80.0,6.0,0.847
-sequence_10.wav,Baleine à bosse,98.0,111.0,13.0,0.69
-sequence_10.wav,Baleine à bosse,121.0,127.0,6.0,0.728
-sequence_10.wav,Baleine à bosse,134.0,143.0,9.0,0.73
-sequence_11.wav,Baleine à bosse,27.0,30.0,3.0,0.659
-sequence_11.wav,Béluga,28.0,31.0,3.0,0.6
-sequence_11.wav,Baleine à bosse,30.0,33.0,3.0,0.59
-sequence_11.wav,Baleine à bosse,49.0,53.0,4.0,0.771
-sequence_11.wav,Baleine à bosse,69.0,72.0,3.0,0.609
-sequence_11.wav,Baleine à bosse,75.0,78.0,3.0,0.584
-sequence_11.wav,Baleine à bosse,93.0,97.0,4.0,0.649
-sequence_11.wav,Baleine à bosse,129.0,134.0,5.0,0.629
-sequence_11.wav,Baleine à bosse,143.0,145.0,2.0,0.753
-sequence_12.wav,Baleine à bosse,19.0,25.0,6.0,0.712
-sequence_12.wav,Baleine à bosse,127.0,132.0,5.0,0.682
-sequence_12.wav,Baleine à bosse,137.0,142.0,5.0,0.815
-sequence_12.wav,Baleine à bosse,165.0,169.0,4.0,0.64
-sequence_12.wav,Baleine à bosse,191.0,193.0,2.0,0.762
-sequence_13.wav,Baleine à bosse,27.0,33.0,6.0,0.767
-sequence_13.wav,Baleine à bosse,37.0,42.0,5.0,0.853
-sequence_13.wav,Baleine à bosse,44.0,53.0,9.0,0.802
-sequence_13.wav,Baleine à bosse,218.0,224.0,6.0,0.737
-sequence_15.wav,Baleine à bosse,21.0,27.0,6.0,0.699
-sequence_15.wav,Baleine à bosse,33.0,38.0,5.0,0.723
-sequence_15.wav,Baleine à bosse,81.0,84.0,3.0,0.625
-sequence_15.wav,Béluga,110.0,113.0,3.0,0.595
-sequence_15.wav,Baleine à bosse,112.0,115.0,3.0,0.829
-sequence_15.wav,Baleine à bosse,117.0,123.0,6.0,0.867
-sequence_15.wav,Baleine à bosse,161.0,171.0,10.0,0.792
-sequence_15.wav,Baleine à bosse,177.0,184.0,7.0,0.784
-sequence_15.wav,Baleine à bosse,224.0,226.0,2.0,0.755
-sequence_16.wav,Baleine à bosse,13.0,18.0,5.0,0.723
-sequence_16.wav,Baleine à bosse,24.0,29.0,5.0,0.8
-sequence_16.wav,Baleine à bosse,77.0,81.0,4.0,0.583
-sequence_16.wav,Baleine à bosse,171.0,176.0,5.0,0.668
-sequence_16.wav,Baleine à bosse,190.0,195.0,5.0,0.691
-sequence_16.wav,Baleine à bosse,215.0,221.0,6.0,0.674
-sequence_16.wav,Baleine à bosse,229.0,234.0,5.0,0.668
-sequence_16.wav,Baleine à bosse,246.0,251.0,5.0,0.766
-sequence_16.wav,Baleine à bosse,262.0,267.0,5.0,0.71
-sequence_16.wav,Baleine à bosse,282.0,284.0,2.0,0.753
-sequence_17.wav,Baleine à bosse,0.0,3.0,3.0,0.581
-sequence_17.wav,Baleine à bosse,8.0,24.0,16.0,0.666
-sequence_17.wav,Baleine à bosse,132.0,138.0,6.0,0.744
-sequence_17.wav,Baleine à bosse,173.0,194.0,21.0,0.768
-sequence_17.wav,Baleine à bosse,233.0,235.0,2.0,0.755
-sequence_20.wav,Baleine à bosse,18.0,23.0,5.0,0.872
-sequence_20.wav,Baleine à bosse,87.0,92.0,5.0,0.726
-sequence_20.wav,Baleine à bosse,182.0,185.0,3.0,0.6
-sequence_20.wav,Baleine à bosse,213.0,218.0,5.0,0.795
-sequence_20.wav,Béluga,223.0,226.0,3.0,0.567
-sequence_20.wav,Baleine à bosse,224.0,229.0,5.0,0.589
-sequence_20.wav,Baleine à bosse,235.0,237.0,2.0,0.753
-sequence_22.wav,Baleine à bosse,24.0,29.0,5.0,0.678
-sequence_22.wav,Baleine à bosse,88.0,100.0,12.0,0.735
-sequence_22.wav,Baleine à bosse,216.0,218.0,2.0,0.754
-sequence_23.wav,Baleine à bosse,142.0,145.0,3.0,0.664
-sequence_23.wav,Béluga,143.0,146.0,3.0,0.586
-sequence_23.wav,Baleine à bosse,145.0,149.0,4.0,0.771
-sequence_23.wav,Baleine à bosse,155.0,162.0,7.0,0.696
-sequence_23.wav,Béluga,189.0,192.0,3.0,0.572
-sequence_23.wav,Baleine à bosse,202.0,205.0,3.0,0.573
-sequence_23.wav,Baleine à bosse,252.0,255.0,3.0,0.604
-sequence_23.wav,Baleine à bosse,261.0,263.0,2.0,0.766
-sequence_26.wav,Baleine à bosse,7.0,10.0,3.0,0.733
-sequence_26.wav,Baleine à bosse,12.0,15.0,3.0,0.73
-sequence_26.wav,Baleine à bosse,26.0,36.0,10.0,0.766
-sequence_26.wav,Baleine à bosse,40.0,43.0,3.0,0.595
-sequence_26.wav,Baleine à bosse,45.0,49.0,4.0,0.645
-sequence_26.wav,Baleine à bosse,80.0,85.0,5.0,0.836
-sequence_26.wav,Baleine à bosse,98.0,101.0,3.0,0.568
-sequence_26.wav,Baleine à bosse,103.0,111.0,8.0,0.749
-sequence_26.wav,Béluga,128.0,133.0,5.0,0.64
-sequence_26.wav,Baleine à bosse,136.0,142.0,6.0,0.796
-sequence_26.wav,Baleine à bosse,148.0,154.0,6.0,0.746
-sequence_26.wav,Baleine à bosse,165.0,167.0,2.0,0.767
-sequence_27.wav,Baleine à bosse,8.0,15.0,7.0,0.724
-sequence_27.wav,Baleine à bosse,27.0,31.0,4.0,0.722
-sequence_27.wav,Baleine à bosse,42.0,45.0,3.0,0.559
-sequence_27.wav,Baleine à bosse,52.0,56.0,4.0,0.619
-sequence_27.wav,Baleine à bosse,60.0,66.0,6.0,0.762
-sequence_27.wav,Baleine à bosse,74.0,79.0,5.0,0.776
-sequence_27.wav,Baleine à bosse,81.0,86.0,5.0,0.643
-sequence_27.wav,Baleine à bosse,115.0,120.0,5.0,0.672
-sequence_27.wav,Baleine à bosse,154.0,159.0,5.0,0.824
-sequence_27.wav,Béluga,191.0,194.0,3.0,0.581
-sequence_27.wav,Baleine à bosse,240.0,242.0,2.0,0.754
-sequence_30.wav,Baleine à bosse,14.0,20.0,6.0,0.722
-sequence_30.wav,Baleine à bosse,69.0,75.0,6.0,0.725
-sequence_30.wav,Baleine à bosse,78.0,83.0,5.0,0.814
-sequence_30.wav,Baleine à bosse,128.0,132.0,4.0,0.679
-sequence_30.wav,Baleine à bosse,135.0,144.0,9.0,0.758
-sequence_30.wav,Baleine à bosse,169.0,179.0,10.0,0.811
-sequence_30.wav,Baleine à bosse,195.0,203.0,8.0,0.829
-sequence_30.wav,Baleine à bosse,221.0,229.0,8.0,0.718
+sequence_06.wav,Béluga,26.5,28.5,2.0,0.99
+sequence_06.wav,Baleine à bosse,28.75,30.75,2.0,0.923
+sequence_06.wav,Baleine à bosse,32.25,34.25,2.0,0.903
+sequence_06.wav,Béluga,60.49,62.49,2.0,0.93
+sequence_06.wav,Baleine à bosse,77.99,82.24,4.25,0.854
+sequence_06.wav,Béluga,136.49,138.49,2.0,0.572
+sequence_06.wav,Baleine à bosse,176.98,178.98,2.0,0.971
+sequence_06.wav,Baleine à bosse,181.98,183.98,2.0,0.949
+sequence_06.wav,Baleine à bosse,222.48,224.48,2.0,0.789
+sequence_07.wav,Baleine à bosse,24.0,26.0,2.0,0.614
+sequence_07.wav,Baleine à bosse,56.74,58.74,2.0,0.793
+sequence_07.wav,Béluga,64.74,66.74,2.0,0.58
+sequence_07.wav,Béluga,117.99,119.99,2.0,0.911
+sequence_07.wav,Baleine à bosse,130.99,132.99,2.0,0.956
+sequence_07.wav,Baleine à bosse,141.99,143.99,2.0,0.974
+sequence_10.wav,Baleine à bosse,33.75,35.75,2.0,0.851
+sequence_10.wav,Béluga,44.75,46.75,2.0,0.944
+sequence_10.wav,Baleine à bosse,55.0,57.0,2.0,0.851
+sequence_10.wav,Baleine à bosse,76.24,78.24,2.0,0.948
+sequence_10.wav,Baleine à bosse,98.24,102.99,4.75,0.664
+sequence_10.wav,Baleine à bosse,107.24,109.24,2.0,0.989
+sequence_10.wav,Baleine à bosse,121.74,125.99,4.25,0.762
+sequence_10.wav,Baleine à bosse,134.74,138.99,4.25,0.801
+sequence_11.wav,Baleine à bosse,27.0,29.0,2.0,0.561
+sequence_11.wav,Béluga,29.25,31.25,2.0,0.946
+sequence_11.wav,Béluga,50.5,52.5,2.0,0.5
+sequence_11.wav,Baleine à bosse,93.99,95.99,2.0,0.843
+sequence_11.wav,Béluga,129.49,131.49,2.0,0.646
+sequence_12.wav,Béluga,20.25,22.25,2.0,0.745
+sequence_12.wav,Béluga,127.49,131.74,4.25,0.592
+sequence_12.wav,Baleine à bosse,137.24,141.49,4.25,0.88
+sequence_13.wav,Baleine à bosse,29.0,31.0,2.0,0.914
+sequence_13.wav,Baleine à bosse,38.75,40.75,2.0,0.953
+sequence_13.wav,Baleine à bosse,44.25,48.5,4.25,0.867
+sequence_13.wav,Baleine à bosse,50.0,52.0,2.0,0.861
+sequence_13.wav,Baleine à bosse,218.48,220.48,2.0,0.743
+sequence_15.wav,Baleine à bosse,22.25,24.25,2.0,0.781
+sequence_15.wav,Baleine à bosse,33.25,37.5,4.25,0.843
+sequence_15.wav,Béluga,54.25,56.25,2.0,0.815
+sequence_15.wav,Béluga,109.99,111.99,2.0,0.682
+sequence_15.wav,Baleine à bosse,112.49,114.49,2.0,0.826
+sequence_15.wav,Baleine à bosse,118.24,122.49,4.25,0.916
+sequence_15.wav,Baleine à bosse,163.74,165.74,2.0,0.954
+sequence_15.wav,Baleine à bosse,167.98,169.98,2.0,0.91
+sequence_15.wav,Baleine à bosse,179.98,181.98,2.0,0.941
+sequence_16.wav,Baleine à bosse,14.25,16.25,2.0,0.81
+sequence_16.wav,Baleine à bosse,26.5,28.5,2.0,0.905
+sequence_16.wav,Béluga,76.99,78.99,2.0,0.857
+sequence_16.wav,Baleine à bosse,172.98,174.98,2.0,0.74
+sequence_16.wav,Baleine à bosse,192.23,194.23,2.0,0.743
+sequence_16.wav,Baleine à bosse,217.98,219.98,2.0,0.678
+sequence_16.wav,Béluga,229.48,231.48,2.0,0.622
+sequence_16.wav,Baleine à bosse,246.23,250.48,4.25,0.76
+sequence_16.wav,Baleine à bosse,263.23,265.23,2.0,0.89
+sequence_16.wav,Béluga,272.48,274.48,2.0,0.83
+sequence_17.wav,Baleine à bosse,0.0,2.0,2.0,0.844
+sequence_17.wav,Baleine à bosse,15.25,17.25,2.0,0.665
+sequence_17.wav,Baleine à bosse,20.75,22.75,2.0,0.642
+sequence_17.wav,Baleine à bosse,132.74,136.99,4.25,0.72
+sequence_17.wav,Baleine à bosse,174.98,176.98,2.0,0.783
+sequence_17.wav,Baleine à bosse,178.48,187.73,9.25,0.907
+sequence_17.wav,Baleine à bosse,190.23,192.23,2.0,0.989
+sequence_20.wav,Baleine à bosse,18.5,20.5,2.0,0.992
+sequence_20.wav,Baleine à bosse,88.24,90.24,2.0,0.939
+sequence_20.wav,Béluga,181.23,183.23,2.0,0.702
+sequence_20.wav,Baleine à bosse,213.98,215.98,2.0,0.893
+sequence_20.wav,Béluga,225.23,227.23,2.0,0.72
+sequence_22.wav,Béluga,25.0,27.0,2.0,0.884
+sequence_22.wav,Baleine à bosse,88.99,90.99,2.0,0.901
+sequence_22.wav,Baleine à bosse,95.24,97.24,2.0,0.739
+sequence_23.wav,Béluga,23.5,25.5,2.0,0.796
+sequence_23.wav,Béluga,79.49,81.49,2.0,0.872
+sequence_23.wav,Béluga,143.24,145.24,2.0,0.915
+sequence_23.wav,Baleine à bosse,145.99,147.99,2.0,0.6
+sequence_23.wav,Baleine à bosse,157.99,159.99,2.0,0.938
+sequence_23.wav,Béluga,189.23,191.23,2.0,0.976
+sequence_23.wav,Baleine à bosse,197.98,199.98,2.0,0.54
+sequence_23.wav,Baleine à bosse,239.98,241.98,2.0,0.687
+sequence_23.wav,Baleine à bosse,252.23,254.23,2.0,0.561
+sequence_26.wav,Baleine à bosse,28.5,35.5,7.0,0.922
+sequence_26.wav,Béluga,48.0,50.0,2.0,0.756
+sequence_26.wav,Baleine à bosse,82.74,84.74,2.0,0.948
+sequence_26.wav,Baleine à bosse,99.99,101.99,2.0,0.604
+sequence_26.wav,Baleine à bosse,104.24,109.24,5.0,0.965
+sequence_26.wav,Béluga,128.99,130.99,2.0,0.892
+sequence_26.wav,Baleine à bosse,137.74,139.74,2.0,0.976
+sequence_26.wav,Béluga,139.99,141.99,2.0,0.725
+sequence_26.wav,Baleine à bosse,148.74,152.99,4.25,0.804
+sequence_27.wav,Baleine à bosse,9.25,13.5,4.25,0.882
+sequence_27.wav,Béluga,27.75,29.75,2.0,0.873
+sequence_27.wav,Béluga,41.75,43.75,2.0,0.559
+sequence_27.wav,Baleine à bosse,60.74,64.99,4.25,0.822
+sequence_27.wav,Baleine à bosse,74.99,76.99,2.0,0.941
+sequence_27.wav,Béluga,82.99,84.99,2.0,0.918
+sequence_27.wav,Baleine à bosse,117.24,119.24,2.0,0.633
+sequence_27.wav,Baleine à bosse,155.24,157.24,2.0,0.963
+sequence_27.wav,Béluga,191.98,193.98,2.0,0.95
+sequence_27.wav,Béluga,232.48,234.48,2.0,0.682
+sequence_30.wav,Baleine à bosse,17.0,19.0,2.0,0.935
+sequence_30.wav,Baleine à bosse,69.74,73.99,4.25,0.804
+sequence_30.wav,Baleine à bosse,80.49,82.49,2.0,0.941
+sequence_30.wav,Béluga,126.99,131.24,4.25,0.888
+sequence_30.wav,Baleine à bosse,136.24,138.24,2.0,0.861
+sequence_30.wav,Baleine à bosse,140.99,142.99,2.0,0.837
+sequence_30.wav,Baleine à bosse,169.48,171.48,2.0,0.984
+sequence_30.wav,Baleine à bosse,175.48,177.48,2.0,0.927
+sequence_30.wav,Baleine à bosse,197.73,201.98,4.25,0.961
+sequence_30.wav,Baleine à bosse,223.23,225.23,2.0,0.879
