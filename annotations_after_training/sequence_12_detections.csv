@@ -1,6 +1,6 @@
 fichier,species,t_start,t_end,duration,mean_confidence
-sequence_12.wav,Baleine à bosse,2.5,6.0,3.5,0.683
-sequence_12.wav,Baleine à bosse,20.5,24.0,3.5,0.645
-sequence_12.wav,Baleine à bosse,128.0,131.5,3.5,0.662
-sequence_12.wav,Baleine à bosse,137.0,141.5,4.5,0.709
-sequence_12.wav,Baleine à bosse,168.5,172.5,4.0,0.696
+sequence_12.wav,Baleine à bosse,2.75,5.5,2.75,0.611
+sequence_12.wav,Baleine à bosse,21.0,23.5,2.5,0.603
+sequence_12.wav,Baleine à bosse,128.24,130.99,2.75,0.611
+sequence_12.wav,Baleine à bosse,137.74,140.99,3.25,0.618
+sequence_12.wav,Baleine à bosse,168.98,171.98,3.0,0.62
