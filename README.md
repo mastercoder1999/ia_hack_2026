@@ -17,7 +17,7 @@ source venv/bin/activate
 
 (dans venv)
 ```
-pip -r requirements.txt
+pip install -r requirements.txt
 ```
 ### Dataset
 ```
