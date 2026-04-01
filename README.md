@@ -1,6 +1,8 @@
 # ia_hack_2026
 Our project repo for IA Hack 2026 hosted by UQAR
 
+[DEMO](https://youtu.be/6E_PljPrRpw)
+
 Maksim Déry, Julien Otis
 
 Enzo Chassé dans nos coeurs
